@@ -77,6 +77,7 @@
         <button class="m1-tab"        id="tab-quiz"   onclick="setMode('quiz')">🎯 Multiple Choice</button>
         <button class="m1-tab"        id="tab-write"  onclick="setMode('write')">✏️ Schreib-Quiz</button>
         <button class="m1-tab"        id="tab-review" onclick="setMode('review')">🔄 Wiederholung</button>
+        <button class="m1-tab"        id="tab-listen" onclick="setMode('listen')">🎧 Hören</button>
       </div>
       <div class="m1-filters">
         <label class="m1-fi"><span>Lektion</span>
@@ -173,6 +174,29 @@
     <!-- Wiederholung -->
     <div id="area-review" class="hidden">
       <div id="review-content"></div>
+    </div>
+
+    <!-- Hören / Dinleme -->
+    <div id="area-listen" class="hidden">
+      <div class="listen-panel">
+        <div class="listen-filters">
+          <label class="m1-fi"><span>Kapitel</span>
+            <select id="listen-unit" onchange="buildListenTeilMenu()"><option value="all">Alle Kapitel</option></select>
+          </label>
+          <label class="m1-fi"><span>Teil</span>
+            <select id="listen-part" onchange="initListenSession()"><option value="all">Alle Teile</option></select>
+          </label>
+          <button class="m1-act" onclick="listenShuffle()">🔀 Mischen</button>
+        </div>
+        <div class="listen-counter-row">
+          <span id="listen-counter" class="listen-counter"></span>
+        </div>
+        <div id="listen-card" class="listen-card"></div>
+        <div class="m1-nav">
+          <button class="m1-nbtn back" onclick="listenPrev()">← Zurück</button>
+          <button class="m1-nbtn next" onclick="listenNext()">Weiter →</button>
+        </div>
+      </div>
     </div>
 
   </div><!-- /page-m1 -->
@@ -314,7 +338,7 @@
 </div><!-- /container -->
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script src="script.js"></script>
+<script src="script.js?v=5"></script>
 <noscript>Bitte JavaScript aktivieren.</noscript>
 </body>
 </html>
