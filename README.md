@@ -25,4 +25,12 @@ npx serve .
 
 ## History
 
-This is the current, most complete version in a small lineage of B2 vocabulary trainers built while iterating on the idea. Earlier iterations — `B2-Vokabel-Trainer`, `Bist-Du-Bereit--B2`, `Hey-Bist-Du-Bereit--B2`, `Sicher-Alll-Tag-und-Beruf-B2`, `Solinetz--Winterthur-B2-Vokabel-Trainer` — share the same "Sicher! B2" word list but are earlier states of the code (no audio, smaller feature set). This repository is the one to keep building on.
+This is the current, most complete version in a small lineage of B2 vocabulary trainers built while iterating on the idea. The earlier iterations shared the same "Sicher! B2" word list but were earlier states of the code (no audio, smaller feature set). Their source is preserved under [`archive/`](archive/) in this repository, one folder per old version:
+
+- [`archive/v1-b2-vokabel-trainer/`](archive/v1-b2-vokabel-trainer/) — was `B2-Vokabel-Trainer`
+- [`archive/v2-bist-du-bereit-b2/`](archive/v2-bist-du-bereit-b2/) — was `Bist-Du-Bereit--B2`
+- [`archive/v3-hey-bist-du-bereit-b2/`](archive/v3-hey-bist-du-bereit-b2/) — was `Hey-Bist-Du-Bereit--B2`
+- [`archive/v4-sicher-alltag-und-beruf-b2/`](archive/v4-sicher-alltag-und-beruf-b2/) — was `Sicher-Alll-Tag-und-Beruf-B2`
+- [`archive/v5-solinetz-winterthur/`](archive/v5-solinetz-winterthur/) — was `Solinetz--Winterthur-B2-Vokabel-Trainer`
+
+These are kept for reference only (not wired into the app) — the standalone GitHub repos they came from are no longer maintained separately. This repository is the one to keep building on.
