@@ -72,22 +72,22 @@ async function loadModul1() {
       res = await fetch("modul1-min.json", { cache: "no-store" });
       if (res.ok) {
         m1All_temp = await res.json();
-        console.log("✓ modul1-min.json yüklendi");
+        console.log("✓ modul1-min.json loaded");
       } else {
         throw new Error("minified not ok");
       }
     } catch (e1) {
       // Minified yoksa normal versiyonu dene
-      console.log("modul1-min.json bulunamadı, modul1.json deneniyor...");
+      console.log("modul1-min.json not found, trying modul1.json...");
       res = await fetch("modul1.json", { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       m1All_temp = await res.json();
-      console.log("✓ modul1.json yüklendi");
+      console.log("✓ modul1.json loaded");
     }
     
     // Array kontrolü
     if (!Array.isArray(m1All_temp)) {
-      throw new Error("JSON bir array değil, tip: " + typeof m1All_temp);
+      throw new Error("JSON is not an array, type: " + typeof m1All_temp);
     }
     
     m1All = m1All_temp;
@@ -107,10 +107,10 @@ async function loadModul1() {
     const allK = [...new Set(m1All.map(r=>r[K_KAPI]).filter(Boolean))].sort((a,b)=>a-b);
     const openK= [...new Set(m1Vocab.map(r=>r[K_KAPI]).filter(Boolean))].sort((a,b)=>a-b);
 
-    setText("m1-words-display", m1Vocab.length + " Karten · " + m1AudioList.length + " Audio");
-    setText("m1-kapitel-info",  openK.length + " von " + allK.length + " Kapitel");
+    setText("m1-words-display", m1Vocab.length + " cards · " + m1AudioList.length + " audio");
+    setText("m1-kapitel-info",  openK.length + " of " + allK.length + " chapters");
     const btn = document.getElementById("m1-btn");
-    if (btn) { btn.innerText = "Starten →"; btn.disabled = false; }
+    if (btn) { btn.innerText = "Start →"; btn.disabled = false; }
 
     buildM1Menu();
     buildListenMenu();
@@ -126,8 +126,8 @@ async function loadModul1() {
       });
     }
   } catch(e) {
-    console.error("Modul1 Ladefehler:", e.message, e);
-    setText("m1-words-display", "Fehler: " + (e.message || "Unbekannt"));
+    console.error("Module 1 load error:", e.message, e);
+    setText("m1-words-display", "Error: " + (e.message || "Unknown"));
   }
 }
 
@@ -139,13 +139,13 @@ async function loadModul2() {
     if (txt.charCodeAt(0) === 0xFEFF) txt = txt.slice(1);
     const p = Papa.parse(txt, { header:true, skipEmptyLines:true, dynamicTyping:false });
     m2Vocab = (p.data||[]).map(normM2).filter(r=>r&&r[M2C.de]&&r[M2C.sentence]);
-    setText("m2-words-display", m2Vocab.length + " Wörter bereit");
+    setText("m2-words-display", m2Vocab.length + " words ready");
     const btn = document.getElementById("m2-btn");
-    if (btn) { btn.innerText = "Starten →"; btn.disabled = false; }
+    if (btn) { btn.innerText = "Start →"; btn.disabled = false; }
     buildM2Menu();
   } catch(e) {
-    console.error("Modul2:", e);
-    setText("m2-words-display", "CSV Fehler!");
+    console.error("Module 2:", e);
+    setText("m2-words-display", "CSV error!");
   }
 }
 
@@ -168,8 +168,8 @@ function buildM1Menu() {
   const ks = [...new Set(m1Vocab.map(r=>r[K_KAPI]).filter(Boolean))].sort((a,b)=>a-b);
   const su = document.getElementById("f-unit");
   if (su) {
-    su.innerHTML = `<option value="all">Alle</option>`;
-    ks.forEach(k => { const o=document.createElement("option"); o.value=String(k); o.innerText="Kapitel "+k; su.appendChild(o); });
+    su.innerHTML = `<option value="all">All</option>`;
+    ks.forEach(k => { const o=document.createElement("option"); o.value=String(k); o.innerText="Chapter "+k; su.appendChild(o); });
   }
   buildTeilMenu();
 }
@@ -179,16 +179,16 @@ function buildTeilMenu() {
   const unit = val("f-unit");
   const filtered = unit==="all" ? m1Vocab : m1Vocab.filter(r=>String(r[K_KAPI])===unit);
   const teile = [...new Set(filtered.map(r=>r[K_TEIL]).filter(Boolean))].sort((a,b)=>a-b);
-  sp.innerHTML = `<option value="all">Alle</option>`;
-  teile.forEach(t => { const o=document.createElement("option"); o.value=String(t); o.innerText="Teil "+t; sp.appendChild(o); });
+  sp.innerHTML = `<option value="all">All</option>`;
+  teile.forEach(t => { const o=document.createElement("option"); o.value=String(t); o.innerText="Part "+t; sp.appendChild(o); });
 }
 
 function buildListenMenu() {
   const ks = [...new Set(m1AudioList.map(r=>r[K_KAPI]).filter(Boolean))].sort((a,b)=>a-b);
   const su = document.getElementById("listen-unit");
   if (su) {
-    su.innerHTML = `<option value="all">Alle Kapitel</option>`;
-    ks.forEach(k => { const o=document.createElement("option"); o.value=String(k); o.innerText="Kapitel "+k; su.appendChild(o); });
+    su.innerHTML = `<option value="all">All chapters</option>`;
+    ks.forEach(k => { const o=document.createElement("option"); o.value=String(k); o.innerText="Chapter "+k; su.appendChild(o); });
   }
   buildListenTeilMenu();
 }
@@ -199,7 +199,7 @@ function buildListenTeilMenu() {
   const filtered = unit==="all" ? m1AudioList : m1AudioList.filter(r=>String(r[K_KAPI])===unit);
   const teile = [...new Set(filtered.map(r=>r[K_TEIL]).filter(Boolean))].sort((a,b)=>a-b);
   sp.innerHTML = `<option value="all">Alle Teile</option>`;
-  teile.forEach(t => { const o=document.createElement("option"); o.value=String(t); o.innerText="Teil "+t; sp.appendChild(o); });
+  teile.forEach(t => { const o=document.createElement("option"); o.value=String(t); o.innerText="Part "+t; sp.appendChild(o); });
   initListenSession();
 }
 
@@ -234,7 +234,7 @@ function openTrainer(mod) {
   }
   
   if (mod===1) {
-    if (!m1Vocab.length && !m1AudioList.length) { alert("Modul 1 wird noch geladen."); return; }
+    if (!m1Vocab.length && !m1AudioList.length) { alert("Module 1 is still loading."); return; }
     hide("page-menu"); show("page-m1"); hide("page-m2");
     m1Mode="flash"; syncTabs(); initSession();
   } else {
@@ -290,7 +290,7 @@ function renderListenCard() {
 
   const item = listenSession[listenIndex];
   const k = item[K_KAPI], t = item[K_TEIL];
-  const badges = k ? `<span class="m1-badge">Kapitel ${k}</span><span class="m1-badge">Teil ${t||1}</span>` : "";
+  const badges = k ? `<span class="m1-badge">Chapter ${k}</span><span class="m1-badge">Part ${t||1}</span>` : "";
 
   el.innerHTML = `
     <div class="listen-word">${esc(item[K_WORT]||"")}</div>
@@ -350,13 +350,13 @@ function initSession() {
 
 function doShuffle() { m1Session.sort(()=>Math.random()-.5); m1Index=0; renderCard(); }
 function doReset() {
-  if (!confirm("Alle Fortschritte zurücksetzen?")) return;
+  if (!confirm("Reset all progress?")) return;
   learnedSet.clear(); favSet.clear(); todayCount=0; saveLS(); initSession();
 }
 function doStats() {
-  alert("📊 Statistik\n\nKarten: "+m1Vocab.length+"\nGelernt: "+learnedSet.size+
-        "\nÜbrig: "+(m1Vocab.length-learnedSet.size)+"\nFavoriten: "+favSet.size+
-        "\nHeute: "+todayCount+" / "+DAILY_GOAL+"\nAudio: "+m1AudioList.length);
+  alert("📊 Stats\n\nCards: "+m1Vocab.length+"\nLearned: "+learnedSet.size+
+        "\nRemaining: "+(m1Vocab.length-learnedSet.size)+"\nFavorites: "+favSet.size+
+        "\nToday: "+todayCount+" / "+DAILY_GOAL+"\nAudio: "+m1AudioList.length);
 }
 
 // ════════════════════════════════════════
@@ -365,7 +365,7 @@ function doStats() {
 function renderCard() {
   updateStats();
   if (!m1Session.length) {
-    setText("fc-word","Keine Wörter gefunden");
+    setText("fc-word","No words found");
     setText("fc-grammar",""); setText("fc-sentence","");
     const b=document.getElementById("fc-badges"); if(b) b.innerHTML=""; return;
   }
@@ -383,7 +383,7 @@ function renderFlash(item) {
   setText("fc-sentence", item[K_SENT]||"");
   const k=item[K_KAPI], t=item[K_TEIL];
   const b=document.getElementById("fc-badges");
-  if (b) b.innerHTML = k ? `<span class="m1-badge">Lektion ${k}</span><span class="m1-badge">Teil ${t||1}</span>` : "";
+  if (b) b.innerHTML = k ? `<span class="m1-badge">Lesson ${k}</span><span class="m1-badge">Part ${t||1}</span>` : "";
   const fb=document.getElementById("fav-btn");
   if (fb) fb.textContent=favSet.has(item[K_WORT])?"★":"☆";
   // Ses elementini sıfırla — otomatik çalmasın
@@ -503,7 +503,7 @@ function doNext() {
   m1Index++;
   if (m1Index >= m1Session.length) {
     if (m1Mode === "quiz") { quizFinished(); return; }
-    alert("🎉 Abschnitt beendet!"); m1Index = 0;
+    alert("🎉 Section complete!"); m1Index = 0;
   }
   renderCard();
 }
@@ -518,8 +518,8 @@ function quizFinished() {
   if (quizWrongSet.size === 0) {
     // Hiç yanlış yok — tur sona erdi
     const msg = quizRetryMode
-      ? "🎉 Super! Alle Fehler korrigiert!\n\n✅ Richtig: " + quizStats.correct + "\n❌ Falsch: " + quizStats.wrong
-      : "🎉 Abschnitt beendet!\n\n✅ Richtig: " + quizStats.correct + "\n❌ Falsch: " + quizStats.wrong;
+      ? "🎉 Great! All mistakes corrected!\n\n✅ Correct: " + quizStats.correct + "\n❌ Wrong: " + quizStats.wrong
+      : "🎉 Section complete!\n\n✅ Correct: " + quizStats.correct + "\n❌ Wrong: " + quizStats.wrong;
     alert(msg);
     quizRetryMode = false;
     quizStats = {correct:0, wrong:0};
@@ -531,9 +531,9 @@ function quizFinished() {
   // Yanlışlar var — retry sor
   const wrongCount = quizWrongSet.size;
   const doRetry = confirm(
-    "🔄 Turda " + wrongCount + " yanlış cevap verdin.\n\n" +
-    "✅ Richtig: " + quizStats.correct + "\n❌ Falsch: " + quizStats.wrong + "\n\n" +
-    "Möchtest du die " + wrongCount + " falschen Wörter wiederholen?"
+    "🔄 You got " + wrongCount + " answers wrong this round.\n\n" +
+    "✅ Correct: " + quizStats.correct + "\n❌ Wrong: " + quizStats.wrong + "\n\n" +
+    "Do you want to review the " + wrongCount + " incorrect words?"
   );
   if (doRetry) {
     // Yanlış yapılan kelimeleri session olarak yükle
@@ -571,10 +571,10 @@ function updateQuizBanner() {
     if (qbox) qbox.insertBefore(banner, qbox.firstChild);
   }
   if (quizRetryMode) {
-    banner.innerHTML = "🔄 <strong>Wiederholungsrunde</strong> – " + quizWrongSet.size + " Fehler-Karten übrig";
+    banner.innerHTML = "🔄 <strong>Review round</strong> – " + quizWrongSet.size + " cards left to retry";
     banner.className = "quiz-retry-banner retry-active";
   } else if (quizWrongSet.size > 0) {
-    banner.innerHTML = "❌ " + quizWrongSet.size + " Fehler gespeichert – werden am Ende wiederholt";
+    banner.innerHTML = "❌ " + quizWrongSet.size + " mistakes saved – will be reviewed at the end";
     banner.className = "quiz-retry-banner has-errors";
   } else {
     banner.innerHTML = "";
@@ -585,7 +585,7 @@ function updateQuizBanner() {
 function renderQuiz(item) {
   const correct=item[K_WORT]||"";
   const label = quizRetryMode
-    ? "🔄 Wiederholung #"+(m1Index+1)+" / "+m1Session.length
+    ? "🔄 Review #"+(m1Index+1)+" / "+m1Session.length
     : "#"+(m1Index+1)+" / "+m1Session.length + (quizStats.correct+quizStats.wrong > 0
         ? " · ✅"+quizStats.correct+" ❌"+quizStats.wrong : "");
   setText("q-question",item[K_SENT]||""); setText("q-meta", label);
@@ -634,10 +634,10 @@ function doCheck() {
   const answer=(document.getElementById("w-input")?.value||"").toLowerCase().trim();
   const res=document.getElementById("w-result"); res.classList.remove("hidden");
   if(answer===correct){
-    res.className="m1-wresult c-ok"; res.innerText="✅ Richtig!";
+    res.className="m1-wresult c-ok"; res.innerText="✅ Correct!";
     if(!learnedSet.has(item[K_WORT])){learnedSet.add(item[K_WORT]);todayCount++;saveLS();}
     updateStats(); setTimeout(doNext,700);
-  } else { res.className="m1-wresult c-err"; res.innerText="❌ Falsch – Richtig: "+item[K_WORT]; }
+  } else { res.className="m1-wresult c-err"; res.innerText="❌ Wrong – Correct answer: "+item[K_WORT]; }
 }
 
 // ════════════════════════════════════════
@@ -680,7 +680,7 @@ function syncTabs() {
 //  MODUL 2
 // ════════════════════════════════════════
 function m2SelectLang(lang,flag,name) {
-  if (!m2Vocab.length) { alert("Daten werden geladen."); return; }
+  if (!m2Vocab.length) { alert("Data is loading."); return; }
   m2Lang=lang; m2LangFlag=flag; m2LangName=name;
   setText("m2-cur-flag",flag); setText("m2-cur-name",name);
   m2ShowApp(); m2Mode="flash"; m2SyncTabs(); m2Init();
@@ -713,7 +713,7 @@ function m2SyncTabs() {
 }
 function m2Render() {
   if(!m2Session.length) return;
-  if(m2Index>=m2Session.length){alert("🎉 Alle Karten abgeschlossen!");m2Index=0;}
+  if(m2Index>=m2Session.length){alert("🎉 All cards completed!");m2Index=0;}
   const item=m2Session[m2Index];
   const pct=Math.round(m2Index/m2Session.length*100);
   setText("m2-total",m2Session.length); setText("m2-correct",m2Stats.correct);
@@ -728,7 +728,7 @@ function m2Render() {
 function m2RenderFlash(item) {
   const lekt=item[M2C.lesson]?"Lektion "+item[M2C.lesson]:"";
   setText("m2-de",item[M2C.de]||""); setText("m2-lektion-badge",lekt);
-  setText("m2-tr",item[m2Lang]||"(keine Übersetzung)"); setText("m2-sent",item[M2C.sentence]||"");
+  setText("m2-tr",item[m2Lang]||"(no translation)"); setText("m2-sent",item[M2C.sentence]||"");
   setText("m2-lektion-badge-back",lekt); show("m2-card-front"); hide("m2-card-back");
 }
 function m2Flip() {
